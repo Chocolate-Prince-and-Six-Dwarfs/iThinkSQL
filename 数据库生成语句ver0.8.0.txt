@@ -153,19 +153,66 @@ CREATE TABLE IF NOT EXISTS `user_otherinfo` (
   CONSTRAINT `user_otherinfo_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `topic_like` (
+  `user_id` int(10) NOT NULL,
+  `topic_id` int(10) NOT NULL,
+  `type` tinyint(1) DEFAULT NULL COMMENT '0是点踩 1是点赞',
+  PRIMARY KEY (`user_id`,`topic_id`),
+  KEY `topic_id` (`topic_id`),
+  CONSTRAINT `topic_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `topic_like_ibfk_2` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `topic_collection` (
+  `user_id` int(10) NOT NULL,
+  `topic_id` int(10) NOT NULL,
+  PRIMARY KEY (`user_id`,`topic_id`),
+  KEY `topic_id` (`topic_id`),
+  CONSTRAINT `topic_collection_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `topic_collection_ibfk_2` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `achievement_like` (
+  `user_id` int(10) NOT NULL,
+  `achievement_id` int(10) NOT NULL,
+  `type` tinyint(1) DEFAULT NULL COMMENT '0是点踩 1是点赞',
+  PRIMARY KEY (`user_id`,`achievement_id`),
+  KEY `achievement_id` (`achievement_id`),
+  CONSTRAINT `achievement_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `achievement_like_ibfk_2` FOREIGN KEY (`achievement_id`) REFERENCES `bbs_achievement` (`achievement_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `achievement_collection` (
+  `user_id` int(10) NOT NULL,
+  `achievement_id` int(10) NOT NULL,
+  PRIMARY KEY (`user_id`,`achievement_id`),
+  KEY `achievement_id` (`achievement_id`),
+  CONSTRAINT `achievement_collection_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `achievement_collection_ibfk_2` FOREIGN KEY (`achievement_id`) REFERENCES `bbs_achievement` (`achievement_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `comment_like` (
+  `user_id` int(10) NOT NULL,
+  `comment_id` int(10) NOT NULL,
+  `type` tinyint(1) DEFAULT NULL COMMENT '0是点踩 1是点赞',
+  PRIMARY KEY (`user_id`,`comment_id`),
+  KEY `comment_id` (`comment_id`),
+  CONSTRAINT `comment_like_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `comment_like_ibfk_2` FOREIGN KEY (`comment_id`) REFERENCES `bbs_comment` (`comment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
 
-INSERT INTO `creative_capsule` VALUES(001, '想法', 001, '我有一个大胆的想法', '2019-10-14', '2019-10-15');
+INSERT INTO `creative_capsule` VALUES(001, '创意胶囊', 001, '创意胶囊内容', '2019-10-14', '2019-10-15');
 
-INSERT INTO `bbs_topic` VALUES(001, 001, '人不可以，至少不应该', 001, '快停下你们的想法', '2019-10-15', 1, 10);
+INSERT INTO `bbs_topic` VALUES(001, 001, '创意主题', 001, '创意主题内容', '2019-10-15', 1, 10);
 
-INSERT INTO `bbs_achievement` VALUES(001, 001, '内容内容内容', 001, 10, 2, '2019-10-14', 1);
+INSERT INTO `bbs_achievement` VALUES(001, 001, '创意实现内容', 001, 10, 2, '2019-10-14', 1);
 
-INSERT INTO `bbs_comment` VALUES(001, 001, 'wwww', '2019-10-14', 1, 1, 001, 001);
+INSERT INTO `bbs_comment` VALUES(001, 001, '创意评论', '2019-10-14', 1, 1, 001, 001);
 
-INSERT INTO `bbs_reply` VALUES(001, 001, '我有一个大胆的想法', '2019-10-22', 1, 001, 001);
+INSERT INTO `bbs_reply` VALUES(001, 001, '创意回复', '2019-10-22', 1, 001, 001);
 
 INSERT INTO `bbs_group` VALUES(001, 001, 'iThink创意实现团组' , '2019-10-21', 001 , 7);
 
