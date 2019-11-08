@@ -98,7 +98,7 @@ CREATE TABLE IF NOT EXISTS `bbs_reply` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
-INSERT INTO `user_info` VALUES(001, 'LiMing', '123', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
+INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
 
 INSERT INTO `creative_capsule` VALUES(001, '想法', 001, '我有一个大胆的想法', '2019-10-14', '2019-10-15');
 
