@@ -1,10 +1,14 @@
-﻿CREATE USER IF NOT EXISTS 'choco'@'localhost' IDENTIFIED BY 'choco';
+﻿DROP USER IF EXISTS 'choco'@'localhost';
+
+CREATE USER 'choco'@'localhost' IDENTIFIED BY 'Chocolate&7';
 
 GRANT ALL PRIVILEGES ON *.* TO 'choco'@'localhost';
 
 FLUSH PRIVILEGES;
 
-CREATE DATABASE IF NOT EXISTS `ithink`;
+DROP DATABASE IF EXISTS `ithink`;
+
+CREATE DATABASE  `ithink`;
 
 USE `ithink`;
 
@@ -54,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
 CREATE TABLE IF NOT EXISTS `bbs_achievement` (
   `achievement_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
    `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '用于记录挂载在那个创意主题下',
-  `achievement_content` varchar(255) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
+  `achievement_content` varchar(500) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '发布创意实现用户的id',
   `achievement_likeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点赞数',
   `achievement_unlikeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点踩数',
@@ -102,7 +106,7 @@ CREATE TABLE IF NOT EXISTS `bbs_reply` (
   CONSTRAINT `bbs_reply_ibfk_3` FOREIGN KEY (`to_uid`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE TABLE `bbs_group` (
+CREATE TABLE IF NOT EXISTS `bbs_group` (
   `group_id` int(10) NOT NULL COMMENT '团组id',
     `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '团组所属的创意主题（外键）',
   `group_name` varchar(20) NOT NULL DEFAULT '' COMMENT '团组名称',
@@ -116,7 +120,7 @@ CREATE TABLE `bbs_group` (
   CONSTRAINT `bbs_group_ibfk_2` FOREIGN KEY (`group_ownerID`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
-CREATE TABLE `group_namelist` (
+CREATE TABLE IF NOT EXISTS `group_namelist` (
   `id` int(10) NOT NULL AUTO_INCREMENT,
   `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '挂靠在一个具体团组下',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '一个团组中具体的人',
@@ -128,13 +132,27 @@ CREATE TABLE `group_namelist` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE `followers_namelist` (
+CREATE TABLE IF NOT EXISTS `followers_namelist` (
   `follow_id` int(10) NOT NULL AUTO_INCREMENT,
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '外键',
   PRIMARY KEY (`follow_id`),
   KEY `user_id` (`user_id`),
   CONSTRAINT `followers_namelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE IF NOT EXISTS `user_otherinfo` (
+  `id` int(10) NOT NULL AUTO_INCREMENT COMMENT '用户附加个人信息',
+  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '关联到具体用户下',
+  `user_address` varchar(20) NOT NULL DEFAULT '' COMMENT '用户居住地',
+  `user_industry` varchar(20) NOT NULL DEFAULT '' COMMENT '所在行业',
+  `user_school` varchar(20) NOT NULL DEFAULT '' COMMENT '所在学校',
+  `user_selfIntroduction` varchar(20) NOT NULL DEFAULT '' COMMENT '对自己的一句话介绍',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `user_otherinfo_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
@@ -154,6 +172,8 @@ INSERT INTO `bbs_group` VALUES(001, 001, 'iThink创意实现团组' , '2019-10-2
 INSERT INTO `group_namelist` VALUES(001, 001, 001);
 
 INSERT INTO `followers_namelist` VALUES(001, 001);
+
+INSERT INTO `user_otherinfo` VALUES(001,001,'中国-四川省-成都市','计算机','西南石油大学','我真的一滴都没有了！');
 
 
 
