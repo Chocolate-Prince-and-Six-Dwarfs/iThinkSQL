@@ -16,10 +16,12 @@ CREATE TABLE IF NOT EXISTS `user_info` (
   `user_email` varchar(20) NOT NULL COMMENT '用户邮箱',
   `user_birth` varchar(20) NOT NULL COMMENT '用户生日',
   `user_phone` varchar(20) NOT NULL COMMENT '用户手机号',
-  `user_credit` int(4) NOT NULL DEFAULT '0' COMMENT '用户信誉积分',
+  `user_credit` int(4) NOT NULL COMMENT '用户信誉积分',
   `user_avatar` blob NOT NULL COMMENT '用户头像，会有默认头像',
-  PRIMARY KEY (`user_id`,`user_email`,`user_phone`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  PRIMARY KEY (`user_id`) USING BTREE,
+  UNIQUE KEY `user_email` (`user_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `creative_capsule` (
   `creative_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '创意胶囊id',
@@ -96,6 +98,60 @@ CREATE TABLE IF NOT EXISTS `bbs_reply` (
   CONSTRAINT `fromUid_bbsReply` FOREIGN KEY (`from_uid`) REFERENCES `user_info` (`user_id`),
   CONSTRAINT `toUid_bbsReply` FOREIGN KEY (`to_uid`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+CREATE TABLE `bbs_group` (
+  `group_id` int(10) NOT NULL COMMENT '团组id',
+  `topic_id` int(10) NOT NULL COMMENT '团组所属的创意主题（外键）',
+  `group_name` varchar(20) NOT NULL COMMENT '团组名称',
+  `group_buildTime` datetime NOT NULL COMMENT '团组建立时间',
+  `group_ownerID` int(10) NOT NULL COMMENT '团组建立者id（外键）',
+  `group_number` int(10) NOT NULL COMMENT '团组中人数（包含建立者）',
+  PRIMARY KEY (`group_id`),
+  KEY `topic_id` (`topic_id`),
+  KEY `group_ownerID` (`group_ownerID`),
+  CONSTRAINT `bbs_group_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`),
+  CONSTRAINT `bbs_group_ibfk_2` FOREIGN KEY (`group_ownerID`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group_namelist` (
+  `id` int(10) NOT NULL,
+  `group_id` int(10) NOT NULL COMMENT '挂靠在一个具体团组下',
+  `user_id` int(10) NOT NULL COMMENT '一个团组中具体的人',
+  PRIMARY KEY (`id`),
+  KEY `group_id` (`group_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `group_namelist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `bbs_group` (`group_id`),
+  CONSTRAINT `group_namelist_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+CREATE TABLE `user_creativeinfo` (
+  `id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL COMMENT '关联对应用户',
+  `user_capsuleNum` int(10) NOT NULL COMMENT '用户拥有创意胶囊数',
+  `user_creativeTopicNum` int(10) NOT NULL COMMENT '用户创意发布数',
+  `user_followNum` int(10) NOT NULL COMMENT '用户关注数',
+  `user_fansNum` int(10) NOT NULL COMMENT '用户被关注数',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `user_creativeinfo_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `followers_namelist` (
+  `follow_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL COMMENT '外键',
+  PRIMARY KEY (`follow_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `followers_namelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_creativeinfo` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `fans_namelist` (
+  `fans_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL COMMENT '外键',
+  PRIMARY KEY (`fans_id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `fans_namelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_creativeinfo` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
