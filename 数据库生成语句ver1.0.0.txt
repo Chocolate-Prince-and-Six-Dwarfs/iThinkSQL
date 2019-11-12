@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '主题发布人id',
   `topic_title` varchar(25) NOT NULL DEFAULT '' COMMENT '创意主题名称（帖子名称）',
   `topic_creativeCapsule` int(10) NOT NULL DEFAULT '0' COMMENT '相对应的创意胶囊的id（外键）',
-  `topic_content` varchar(255) NOT NULL DEFAULT '' COMMENT '创意主题内容（发布人额外的描述）',
+  `topic_content` varchar(21000) NOT NULL DEFAULT '' COMMENT '创意主题内容（发布人额外的描述）',
   `topic_buildTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创意主题发布（生成）的时间',
   `topic_achievementNum` int(10) NOT NULL DEFAULT '0' COMMENT '创意实现想法数量',
   `topic_collectionNum` int(10) NOT NULL DEFAULT '0' COMMENT '创意主题收藏数',
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
 CREATE TABLE IF NOT EXISTS `bbs_achievement` (
   `achievement_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
    `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '用于记录挂载在那个创意主题下',
-  `achievement_content` varchar(500) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
+  `achievement_content` varchar(21000) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '发布创意实现用户的id',
   `achievement_likeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点赞数',
   `achievement_unlikeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点踩数',
