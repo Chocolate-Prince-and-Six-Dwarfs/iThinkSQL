@@ -44,7 +44,7 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '主题发布人id',
   `topic_title` varchar(25) NOT NULL DEFAULT '' COMMENT '创意主题名称（帖子名称）',
   `topic_creativeCapsule` int(10) NOT NULL DEFAULT '0' COMMENT '相对应的创意胶囊的id（外键）',
-  `topic_content` varchar(21000) NOT NULL DEFAULT '' COMMENT '创意主题内容（发布人额外的描述）',
+  `topic_content` varchar(255) NOT NULL DEFAULT '' COMMENT '创意主题内容（发布人额外的描述）',
   `topic_buildTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创意主题发布（生成）的时间',
   `topic_achievementNum` int(10) NOT NULL DEFAULT '0' COMMENT '创意实现想法数量',
   `topic_collectionNum` int(10) NOT NULL DEFAULT '0' COMMENT '创意主题收藏数',
@@ -58,7 +58,7 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
 CREATE TABLE IF NOT EXISTS `bbs_achievement` (
   `achievement_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
    `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '用于记录挂载在那个创意主题下',
-  `achievement_content` varchar(21000) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
+  `achievement_content` varchar(500) NOT NULL DEFAULT '' COMMENT '创意实现想法内容',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '发布创意实现用户的id',
   `achievement_likeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点赞数',
   `achievement_unlikeNum` int(10) NOT NULL DEFAULT '0' COMMENT '实现想法点踩数',
@@ -104,31 +104,6 @@ CREATE TABLE IF NOT EXISTS `bbs_reply` (
   CONSTRAINT `bbs_reply_ibfk_1` FOREIGN KEY (`comment_id`) REFERENCES `bbs_comment` (`comment_id`),
   CONSTRAINT `bbs_reply_ibfk_2` FOREIGN KEY (`from_uid`) REFERENCES `user_info` (`user_id`),
   CONSTRAINT `bbs_reply_ibfk_3` FOREIGN KEY (`to_uid`) REFERENCES `user_info` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `bbs_group` (
-  `group_id` int(10) NOT NULL COMMENT '团组id',
-    `topic_id` int(10) NOT NULL DEFAULT '0' COMMENT '团组所属的创意主题（外键）',
-  `group_name` varchar(20) NOT NULL DEFAULT '' COMMENT '团组名称',
-  `group_buildTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '团组建立时间',
-  `group_ownerID` int(10) NOT NULL DEFAULT '0' COMMENT '团组建立者id（外键）',
-  `group_number` int(10) NOT NULL DEFAULT '0' COMMENT '团组中人数（包含建立者）',
-  PRIMARY KEY (`group_id`),
-  KEY `topic_id` (`topic_id`),
-  KEY `group_ownerID` (`group_ownerID`),
-  CONSTRAINT `bbs_group_ibfk_1` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`),
-  CONSTRAINT `bbs_group_ibfk_2` FOREIGN KEY (`group_ownerID`) REFERENCES `user_info` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
-
-CREATE TABLE IF NOT EXISTS `group_namelist` (
-  `id` int(10) NOT NULL AUTO_INCREMENT,
-  `group_id` int(10) NOT NULL DEFAULT '0' COMMENT '挂靠在一个具体团组下',
-  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '一个团组中具体的人',
-  PRIMARY KEY (`id`),
-  KEY `group_id` (`group_id`),
-  KEY `user_id` (`user_id`),
-  CONSTRAINT `group_namelist_ibfk_1` FOREIGN KEY (`group_id`) REFERENCES `bbs_group` (`group_id`),
-  CONSTRAINT `group_namelist_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
@@ -216,7 +191,49 @@ CREATE TABLE `updatetime` (
   CONSTRAINT `updatetime_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+CREATE TABLE `chat_room` (
+  `id` int(20) NOT NULL,
+  `name` varchar(20) NOT NULL DEFAULT '',
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `topic_id` int(20) DEFAULT NULL,
+  `owner_id` int(20) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `topic_id_idx` (`topic_id`),
+  KEY `owner_id_idx` (`owner_id`),
+  CONSTRAINT `owner_id` FOREIGN KEY (`owner_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `topic_id` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+CREATE TABLE `chat_update_time` (
+  `user_id` int(20) NOT NULL,
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`),
+  CONSTRAINT `user_id_chatUpdateTime` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group_chat_record` (
+  `id` int(20) NOT NULL AUTO_INCREMENT,
+  `from_id` int(20) NOT NULL,
+  `to_id` int(20) NOT NULL,
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  `content` varchar(255) NOT NULL DEFAULT '',
+  PRIMARY KEY (`id`),
+  KEY `from_id_idx` (`from_id`),
+  KEY `to_id_idx` (`to_id`),
+  CONSTRAINT `from_id` FOREIGN KEY (`from_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `to_id` FOREIGN KEY (`to_id`) REFERENCES `chat_room` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group_member` (
+  `chat_room_id` int(20) NOT NULL,
+  `user_id` int(20) NOT NULL,
+  `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`chat_room_id`,`user_id`),
+  KEY `user_id_idx` (`user_id`),
+  CONSTRAINT `chat_room_id` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`id`),
+  CONSTRAINT `user_id` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
@@ -231,15 +248,18 @@ INSERT INTO `bbs_comment` VALUES(001, 001, '创意评论', '2019-10-14', 1, 1, 0
 
 INSERT INTO `bbs_reply` VALUES(001, 001, '创意回复', '2019-10-22', 1, 001, 001);
 
-INSERT INTO `bbs_group` VALUES(001, 001, 'iThink创意实现团组' , '2019-10-21', 001 , 7);
-
-INSERT INTO `group_namelist` VALUES(001, 001, 001);
-
 INSERT INTO `followers_namelist` VALUES(001, 001);
 
 INSERT INTO `user_otherinfo` VALUES(001,001,'中国-四川省-成都市','计算机','西南石油大学','我真的一滴都没有了！');
 
 INSERT INTO `updatetime` (user_id) VALUES(001);
+
+INSERT INTO `chat_room` (id, `name`, topic_id, owner_id) VALUES(1, "测试用聊天团组", 1, 1);
+
+INSERT INTO `chat_update_time` (user_id) VALUES(1);
+
+INSERT INTO `group_member` (user_id, chat_room_id) VALUES(1, 1);
+
 
 
 
