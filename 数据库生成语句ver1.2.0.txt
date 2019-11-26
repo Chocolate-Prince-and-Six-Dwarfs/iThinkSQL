@@ -39,11 +39,11 @@ CREATE TABLE IF NOT EXISTS `creative_capsule` (
   CONSTRAINT `creative_capsule_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
-CREATE TABLE IF NOT EXISTS `bbs_topic` (
+CREATE TABLE `bbs_topic` (
   `topic_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '创意主题id（类似知乎问题）',
   `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '主题发布人id',
   `topic_title` varchar(25) NOT NULL DEFAULT '' COMMENT '创意主题名称（帖子名称）',
-  `topic_creativeCapsule` int(10) NOT NULL DEFAULT '0' COMMENT '相对应的创意胶囊的id（外键）',
+  `topic_creativeCapsule` int(10) DEFAULT NULL COMMENT '相对应的创意胶囊的id（外键）',
   `topic_content` varchar(255) NOT NULL DEFAULT '' COMMENT '创意主题内容（发布人额外的描述）',
   `topic_buildTime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创意主题发布（生成）的时间',
   `topic_achievementNum` int(10) NOT NULL DEFAULT '0' COMMENT '创意实现想法数量',
@@ -53,7 +53,8 @@ CREATE TABLE IF NOT EXISTS `bbs_topic` (
   KEY `topic_creativeCapsule` (`topic_creativeCapsule`),
   CONSTRAINT `bbs_topic_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`),
   CONSTRAINT `bbs_topic_ibfk_2` FOREIGN KEY (`topic_creativeCapsule`) REFERENCES `creative_capsule` (`creative_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+
 
 CREATE TABLE IF NOT EXISTS `bbs_achievement` (
   `achievement_id` int(10) NOT NULL AUTO_INCREMENT COMMENT '主键',
@@ -240,7 +241,7 @@ INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com',
 
 INSERT INTO `creative_capsule` VALUES(001, '创意胶囊', 001, '创意胶囊内容', '2019-10-14', '2019-10-15');
 
-INSERT INTO `bbs_topic` VALUES(001, 001, '创意主题', 001, '创意主题内容', '2019-10-15', 1, 10);
+INSERT INTO `bbs_topic` VALUES(001, 001, '创意主题', null, '创意主题内容', '2019-10-15', 1, 10);
 
 INSERT INTO `bbs_achievement` VALUES(001, 001, '创意实现内容', 001, 10, 2, '2019-10-14', 1);
 
@@ -259,7 +260,6 @@ INSERT INTO `chat_room` (id, `name`, topic_id, owner_id) VALUES(1, "测试用聊
 INSERT INTO `chat_update_time` (user_id) VALUES(1);
 
 INSERT INTO `group_member` (user_id, chat_room_id) VALUES(1, 1);
-
 
 
 
