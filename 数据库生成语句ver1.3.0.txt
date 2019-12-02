@@ -241,6 +241,21 @@ CREATE TABLE `group_member` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 
+CREATE TABLE `private_chat` (
+  `chat_room_id` int(20) NOT NULL,
+  `user_id_1` int(20) NOT NULL,
+  `user_id_2` int(20) NOT NULL,
+  PRIMARY KEY (`user_id_1`,`user_id_2`),
+  UNIQUE KEY `chat_room_id_UNIQUE` (`chat_room_id`),
+  KEY `user_id_2_fk_idx` (`user_id_2`),
+  CONSTRAINT `chat_room_id_fk` FOREIGN KEY (`chat_room_id`) REFERENCES `chat_room` (`id`),
+  CONSTRAINT `user_id_1_fk` FOREIGN KEY (`user_id_1`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `user_id_2_fk` FOREIGN KEY (`user_id_2`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
 
 INSERT INTO `user_info` VALUES(002, '小红', '123456', '女', 'example2@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
@@ -253,7 +268,7 @@ INSERT INTO `bbs_achievement` VALUES(001, 001, '创意实现内容', 001, 10, 2,
 
 INSERT INTO `bbs_comment` VALUES(001, 001, '创意评论', '2019-10-14', 1, 1, 001, 001);
 
-INSERT INTO `bbs_reply` VALUES(001, 001, '创意回复', '2019-10-22', 1, 001, 001);
+#INSERT INTO `bbs_reply` VALUES(001, 001, '创意回复', '2019-10-22', 1, 001, 001);
 
 INSERT INTO `followers_namelist` VALUES(001, 002);
 
@@ -261,11 +276,17 @@ INSERT INTO `user_otherinfo` VALUES(001,001,'中国-四川省-成都市','计算
 
 INSERT INTO `updatetime` (user_id) VALUES(001);
 
+INSERT INTO `updatetime` (user_id) VALUES(2);
+
 INSERT INTO `chat_room` (id, `name`, topic_id, owner_id) VALUES(1, "测试用聊天团组", 1, 1);
 
 INSERT INTO `chat_update_time` (user_id) VALUES(1);
 
+INSERT INTO `chat_update_time` (user_id) VALUES(2);
+
 INSERT INTO `group_member` (user_id, chat_room_id) VALUES(1, 1);
+
+INSERT INTO `group_member` (user_id, chat_room_id) VALUES(2, 1);
 
 
 
