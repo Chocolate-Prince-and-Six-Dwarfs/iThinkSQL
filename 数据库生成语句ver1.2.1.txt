@@ -193,7 +193,7 @@ CREATE TABLE `updatetime` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `chat_room` (
-  `id` int(20) NOT NULL,
+  `id` int(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(20) NOT NULL DEFAULT '',
   `time` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `topic_id` int(20) DEFAULT NULL,
@@ -203,7 +203,8 @@ CREATE TABLE `chat_room` (
   KEY `owner_id_idx` (`owner_id`),
   CONSTRAINT `owner_id` FOREIGN KEY (`owner_id`) REFERENCES `user_info` (`user_id`),
   CONSTRAINT `topic_id` FOREIGN KEY (`topic_id`) REFERENCES `bbs_topic` (`topic_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+
 
 
 CREATE TABLE `chat_update_time` (
