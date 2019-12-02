@@ -262,9 +262,9 @@ INSERT INTO `user_info` VALUES(002, '小红', '123456', '女', 'example2@qq.com'
 
 INSERT INTO `creative_capsule` VALUES(001, '创意胶囊', 001, '创意胶囊内容', '2019-10-14', '2019-10-15');
 
-INSERT INTO `bbs_topic` VALUES(001, 001, '创意主题', null, '创意主题内容', '2019-10-15', 1, 10);
+INSERT INTO `bbs_topic` VALUES(001, 001, '【个人测试Debug必读】', 001, '<p>遇到问题先清空缓存，可能是上个版本历史遗留问题</p><p>1、界面逻辑或者美观性问题请联系 陈劲松|干冰雪|沈墨|易林</p><p>2、蜜汁bug请联系 王艺霖</p><p>3、想打人请联系陶一，<strike>他头铁</strike>是组长</p><p>4、其他问题请联系 孟祥一|陶一</p>', '2019-11-23 11:30:21', 1, 10);
 
-INSERT INTO `bbs_achievement` VALUES(001, 001, '创意实现内容', 001, 10, 2, '2019-10-14', 1);
+INSERT INTO `bbs_achievement` VALUES(001, 001, '<b>有什么问题可以在我的这个创意实现下面评论留言<img src="http://47.97.187.33:8080/layui/images/face/32.gif" alt="[困]"></b>', 001, 10, 2, '2019-11-23 11:42:27', 1);
 
 INSERT INTO `bbs_comment` VALUES(001, 001, '创意评论', '2019-10-14', 1, 1, 001, 001);
 
