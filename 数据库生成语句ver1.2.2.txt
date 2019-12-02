@@ -108,13 +108,16 @@ CREATE TABLE IF NOT EXISTS `bbs_reply` (
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 
-CREATE TABLE IF NOT EXISTS `followers_namelist` (
-  `follow_id` int(10) NOT NULL AUTO_INCREMENT,
-  `user_id` int(10) NOT NULL DEFAULT '0' COMMENT '外键',
-  PRIMARY KEY (`follow_id`),
+CREATE TABLE `followers_namelist` (
+  `follow_id` int(10) NOT NULL,
+  `user_id` int(10) NOT NULL,
+  PRIMARY KEY (`follow_id`,`user_id`),
   KEY `user_id` (`user_id`),
-  CONSTRAINT `followers_namelist_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+  CONSTRAINT `follw_id_fk` FOREIGN KEY (`follow_id`) REFERENCES `user_info` (`user_id`),
+  CONSTRAINT `user_id_fk` FOREIGN KEY (`user_id`) REFERENCES `user_info` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
 
 
 CREATE TABLE IF NOT EXISTS `user_otherinfo` (
@@ -240,6 +243,8 @@ CREATE TABLE `group_member` (
 
 INSERT INTO `user_info` VALUES(001, 'LiMing', '123456', '男', 'example@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
 
+INSERT INTO `user_info` VALUES(002, '小红', '123456', '女', 'example2@qq.com', '1999-01-01', '173****0612', '32', bin(0101));
+
 INSERT INTO `creative_capsule` VALUES(001, '创意胶囊', 001, '创意胶囊内容', '2019-10-14', '2019-10-15');
 
 INSERT INTO `bbs_topic` VALUES(001, 001, '创意主题', null, '创意主题内容', '2019-10-15', 1, 10);
@@ -250,7 +255,7 @@ INSERT INTO `bbs_comment` VALUES(001, 001, '创意评论', '2019-10-14', 1, 1, 0
 
 INSERT INTO `bbs_reply` VALUES(001, 001, '创意回复', '2019-10-22', 1, 001, 001);
 
-INSERT INTO `followers_namelist` VALUES(001, 001);
+INSERT INTO `followers_namelist` VALUES(001, 002);
 
 INSERT INTO `user_otherinfo` VALUES(001,001,'中国-四川省-成都市','计算机','西南石油大学','我真的一滴都没有了！');
 
